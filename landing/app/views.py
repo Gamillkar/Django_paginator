@@ -24,8 +24,15 @@ def landing(request):
 
 
 def stats(request):
-    ratio_original = counter_click['original']/counter_show['original']
-    ratio_test = counter_click['test']/counter_show['test']
+    try:
+        ratio_original = counter_click['original']/counter_show['original']
+
+    except:
+        ratio_original = 0
+    try:
+        ratio_test = counter_click['test'] / counter_show['test']
+    except:
+        ratio_test = 0
     return render_to_response('stats.html', context={
         'test_conversion': ratio_test,
         'original_conversion': ratio_original,
