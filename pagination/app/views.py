@@ -13,15 +13,11 @@ def index(request):
 
 
 def bus_stations(request):
-
-    bus_stations_list = []
     with open(BUS_STATION_CSV, newline='') as file:
         data_bus = list(csv.DictReader(file))
         current_page = int(request.GET.get('page', 1))
-
         paginator = Paginator(data_bus, 10)
         page_obj = paginator.get_page(current_page)
-
         link = reverse(bus_stations)
         prev_page, next_page = None, None
         if page_obj.has_previous():
@@ -30,13 +26,8 @@ def bus_stations(request):
         if page_obj.has_next():
             next_page = urlencode({'page': current_page + 1})
             next_page = f'{link}?{next_page}'
-
-        dirty_el = page_obj.object_list
-        for row in dirty_el:
-            element = {'Name': row['Name'], 'Street': row['Street'], 'District': row['District']}
-            bus_stations_list.append(element)
             context = {
-                'bus_stations': bus_stations_list,
+                'bus_stations': page_obj,
                 'current_page': current_page,
                 'prev_page_url': prev_page,
                 'next_page_url': next_page,
